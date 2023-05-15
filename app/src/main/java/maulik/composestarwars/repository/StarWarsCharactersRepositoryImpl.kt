@@ -1,8 +1,8 @@
-package maulik.composestarwars.di.repository
+package maulik.composestarwars.repository
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import maulik.composestarwars.di.network.StarWarsApiService
+import maulik.composestarwars.network.StarWarsApiService
 import javax.inject.Inject
 
 class StarWarsCharactersRepositoryImpl @Inject constructor(
@@ -10,7 +10,7 @@ class StarWarsCharactersRepositoryImpl @Inject constructor(
 ) : StarWarsCharactersRepository {
 
     override fun getCharacters() = Pager(
-        config = PagingConfig(10, prefetchDistance = 2, initialLoadSize = 1),
+        config = PagingConfig(10),
         pagingSourceFactory = {
             StarWarsCharactersPagingSource(starWarsApiService)
         }

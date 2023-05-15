@@ -4,6 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import maulik.composestarwars.repository.StarWarsCharactersRepository
+import maulik.composestarwars.repository.StarWarsCharactersRepositoryImpl
 
 @Module
 @InstallIn(SingletonComponent::class)

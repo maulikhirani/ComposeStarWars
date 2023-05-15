@@ -1,4 +1,4 @@
-package maulik.composestarwars.model
+package maulik.composestarwars.network.model
 
 import com.google.gson.annotations.SerializedName
 

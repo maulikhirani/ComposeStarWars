@@ -7,15 +7,25 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.add
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LargeTopAppBar
@@ -44,6 +54,7 @@ import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import dagger.hilt.android.AndroidEntryPoint
@@ -68,24 +79,24 @@ class MainActivity : ComponentActivity() {
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun StarWarsApp(viewModel: StarWarsViewModel) {
 
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val pagingItems = viewModel.getCharacters().collectAsLazyPagingItems()
-
 
     Scaffold(
         topBar = {
-            LargeTopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
-                    Text(text = "StarWars Compose")
+                    Text(text = "Compose StarWars")
                 },
                 scrollBehavior = scrollBehavior
 
             )
         },
+        contentWindowInsets = WindowInsets(0.dp),
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) {
         Surface(
@@ -95,37 +106,47 @@ fun StarWarsApp(viewModel: StarWarsViewModel) {
             color = MaterialTheme.colorScheme.background
         ) {
 
+            when(pagingItems.loadState.refresh) {
+                LoadState.Loading -> {
+                    StarWarsLoader()
+                }
+                is LoadState.Error -> {
+                    Text(text = "Something went wrong")
+                }
+                else -> {
+                    val contentPadding = WindowInsets
+                        .navigationBars
+                        .add(WindowInsets(left = 16.dp, top = 16.dp, right = 16.dp, bottom = 16.dp))
+                        .asPaddingValues()
+                    LazyColumn(
+                        contentPadding = contentPadding,
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        content = {
 
-            LazyColumn(contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                content = {
-                    if (pagingItems.loadState.refresh == LoadState.Loading) {
-                        item {
-                            StarWarsLoader()
-                        }
-                    }
+                            items(
+                                count = pagingItems.itemCount,
+                                key = pagingItems.itemKey(),
+                            ) {
+                                val item = pagingItems[it]
+                                if (item != null) {
+                                    StarWarsCharacterUi(name = item.name)
+                                }
+                            }
+
+                            if (pagingItems.loadState.append == LoadState.Loading) {
+                                item {
+                                    StarWarsLoader(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(100.dp)
+                                    )
+                                }
+                            }
+                        })
+                }
+            }
 
 
-                    items(
-                        count = pagingItems.itemCount,
-                        key = pagingItems.itemKey(),
-                    ) {
-                        val item = pagingItems[it]
-                        if (item != null) {
-                            StarWarsCharacterUi(name = item.name)
-                        }
-                    }
-
-                    if (pagingItems.loadState.append == LoadState.Loading) {
-                        item {
-                            StarWarsLoader(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(100.dp)
-                            )
-                        }
-                    }
-                })
         }
     }
 
@@ -157,7 +178,7 @@ fun StarWarsCharacterUi(name: String) {
 @Composable
 fun StarWarsLoader(modifier: Modifier = Modifier) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loader))
-    val progress by animateLottieCompositionAsState(composition)
+    val progress by animateLottieCompositionAsState(composition, iterations =  LottieConstants.IterateForever)
     LottieAnimation(
         modifier = modifier,
         composition = composition,

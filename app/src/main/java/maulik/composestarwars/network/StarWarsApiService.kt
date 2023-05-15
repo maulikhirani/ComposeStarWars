@@ -1,6 +1,6 @@
-package maulik.composestarwars.di.network
+package maulik.composestarwars.network
 
-import maulik.composestarwars.model.StarWarsApiResponse
+import maulik.composestarwars.network.model.StarWarsApiResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
