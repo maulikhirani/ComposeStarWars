@@ -111,7 +111,11 @@ fun StarWarsApp(viewModel: StarWarsViewModel) {
                     StarWarsLoader()
                 }
                 is LoadState.Error -> {
-                    Text(text = "Something went wrong")
+                    (pagingItems.loadState.refresh as LoadState.Error).error.also {
+                        it.printStackTrace()
+                    }.message.let {
+                        Text(text = it ?: "Something went wrong")
+                    }
                 }
                 else -> {
                     val contentPadding = WindowInsets
