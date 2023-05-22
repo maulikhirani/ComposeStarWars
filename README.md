@@ -6,6 +6,8 @@ This is a simple & low-to-medium complexity demo app which covers multiple aspec
 
 Well, the idea is fairly simple - we are using an open source API from https://swapi.dev/ to load the list of StarWars universe characters. We don't load all characters at once, so we use the concept of pagination to load more data when scrolled to bottom.
 
+https://github.com/maulikhirani/ComposeStarWars/assets/25861055/a41bb41f-a5ff-4ffc-b01a-e680387f3ac2
+
 ## How the app is built?
 
 The app is built with the latest tools and development practices:
