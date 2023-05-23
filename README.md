@@ -1,6 +1,8 @@
 # Compose StarWars
 ![Release Workflow](https://github.com/maulikhirani/ComposeStarWars/actions/workflows/android.yml/badge.svg) 
 
+![Group 1](https://github.com/maulikhirani/ComposeStarWars/assets/25861055/87f6365d-8327-4074-9d99-337cd338ee82)
+
 This is a simple & low complexity demo app which covers multiple aspects of Modern Android Development practices and tools.
 
 ## What does the app look like?
