@@ -1,9 +1,9 @@
 # Compose StarWars
 ![Release Workflow](https://github.com/maulikhirani/ComposeStarWars/actions/workflows/android.yml/badge.svg) 
 
-This is a simple & low-to-medium complexity demo app which covers multiple aspects of Modern Android Development practices and tools.
+This is a simple & low complexity demo app which covers multiple aspects of Modern Android Development practices and tools.
 
-## What does the app looks like?
+## What does the app look like?
 
 Well, the idea is fairly simple - we are using an open source API from https://swapi.dev/ to load the list of StarWars universe characters. We don't load all characters at once, so we use the concept of pagination to load more data when scrolled to bottom.
 
